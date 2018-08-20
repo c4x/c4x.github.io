@@ -116,7 +116,7 @@
 
 
 
-  <title>Spring事物隔离级别 | Cfour's Blog</title>
+  <title>Nginx剪裁图片 | Cfour's Blog</title>
   
 
 
@@ -235,7 +235,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://c4x.github.io/2017/05/26/Spring_Transaction/">
+    <link itemprop="mainEntityOfPage" href="http://c4x.github.io/2017/06/30/Nginx_Cut_image/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Cfour's Blog">
@@ -252,7 +252,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Spring事物隔离级别</h1>
+          <h1 class="post-title" itemprop="name headline">Nginx剪裁图片</h1>
         
 
         <div class="post-meta">
@@ -264,7 +264,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-26T16:32:26+08:00">2017-05-26</time>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-30T20:27:15+08:00">2017-06-30</time>
             
 
             
@@ -285,8 +285,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
                   </a>
                 </span>
 
@@ -322,54 +322,42 @@
       
 
       
-        <h2 id="Spring事物隔离级别"><a href="#Spring事物隔离级别" class="headerlink" title="Spring事物隔离级别"></a>Spring事物隔离级别</h2><table>
-<thead>
-<tr>
-<th>传播行为</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PROPAGATION_REQUIRED</td>
-<td>表示当前方法必须在一个具有事务的上下文中运行，如有客户端有事务在进行，那么被调用端将在该事务中运行，否则的话重新开启一个事务。</td>
-</tr>
-<tr>
-<td>PROPAGATION_SUPPORTS</td>
-<td>表示当前方法不必需要具有一个事务上下文，但是如果有一个事务的话，它也可以在这个事务中运行。</td>
-</tr>
-<tr>
-<td>PROPAGATION_MANDATORY</td>
-<td>表示当前方法必须在一个事务中运行，如果没有事务，将抛出异常。</td>
-</tr>
-<tr>
-<td>PROPAGATION_NESTED</td>
-<td>表示如果当前方法正有一个事务在运行中，则该方法应该运行在一个嵌套事务中，被嵌套的事务可以独立于被封装的事务中进行提交或者回滚。</td>
-</tr>
-<tr>
-<td>PROPAGATION_NEVER</td>
-<td>表示当方法务不应该在一个事务中运行，如果存在一个事务，则抛出异常。</td>
-</tr>
-<tr>
-<td>PROPAGATION_REQUIRES_NEW</td>
-<td>表示当前方法必须运行在它自己的事务中。</td>
-</tr>
-<tr>
-<td>PROPAGATION_NOT_SUPPORTED</td>
-<td>表示该方法不应该在一个事务中运行。</td>
-</tr>
-</tbody>
-</table>
-<hr>
-<h2 id="隔离级别的简要说明"><a href="#隔离级别的简要说明" class="headerlink" title="隔离级别的简要说明"></a>隔离级别的简要说明</h2><h3 id="PROPAGATION-REQUIRED"><a href="#PROPAGATION-REQUIRED" class="headerlink" title="PROPAGATION_REQUIRED"></a>PROPAGATION_REQUIRED</h3><p>加入当前正要执行的事务， 如果没有事物， 那么就起一个新的事务。<br>例如: methodB 的事务级别定义为 PROPAGATION_REQUIRED， methodA 已经起了事务。这时，在methodA 中调用 methodB， methodB 看到自己已经运行在methodA的事务内部，就不再起新的事务。而假如methodA 运行的时候没有起事物， methodB就会为自己分配一个事务， 这样，在methodA 或者在methodB 内的任何地方出现异常，事务都会被回滚。即使methodB 的事务已经被提交，但是 methodA 在接下来要回滚， methodB 也要回滚。</p>
-<h3 id="PROPAGATION-SUPPORTS"><a href="#PROPAGATION-SUPPORTS" class="headerlink" title="PROPAGATION_SUPPORTS"></a>PROPAGATION_SUPPORTS</h3><p>如果当前在事务中，即以事务的形式运行，如果当前不再一个事务中，那么就以非事务的形式运行。</p>
-<h3 id="PROPAGATION-MANDATORY"><a href="#PROPAGATION-MANDATORY" class="headerlink" title="PROPAGATION_MANDATORY"></a>PROPAGATION_MANDATORY</h3><p>必须在一个事务中运行。也就是说，他只能被一个父事务调用。否则，他就要抛出异常。</p>
-<h3 id="PROPAGATION-REQUIRES-NEW"><a href="#PROPAGATION-REQUIRES-NEW" class="headerlink" title="PROPAGATION_REQUIRES_NEW"></a>PROPAGATION_REQUIRES_NEW</h3><p>比如我们设计 ServiceA。methodA 的事务级别为 PROPAGATION_REQUIRED， ServiceB。methodB 的事务级别为 PROPAGATION_REQUIRES_NEW， 那么当执行到 ServiceB。methodB 的时候，ServiceA。methodA 所在的事务就会挂起， ServiceB。methodB 会起一个新的事务， 该事物拥有自己的<strong>独立隔离级别</strong>和<strong>锁</strong>， 不依赖于外部事物， 等待 ServiceB。methodB 的事务完成以后， 他才继续执行。他与 PROPAGATION_REQUIRED 的事务区别在于事务的回滚程度了。因为 ServiceB。methodB 是新起一个事务， 那么就是存在两个不同的事务。如果 ServiceB。methodB 已经提交， 那么 ServiceA。methodA 失败回滚， ServiceB。methodB 是不会回滚的。如果 ServiceB。methodB 失败回滚， 如果他抛出的异常没有被 ServiceA。methodA 捕获，ServiceA。methodA 事务仍然可能提交。</p>
-<h3 id="PROPAGATION-NOT-SUPPORTED"><a href="#PROPAGATION-NOT-SUPPORTED" class="headerlink" title="PROPAGATION_NOT_SUPPORTED"></a>PROPAGATION_NOT_SUPPORTED</h3><p>当前不支持事务。比如 ServiceA。methodA 的事务级别是 PROPAGATION_REQUIRED， 而 ServiceB。methodB 的事务级别是 PROPAGATION_NOT_SUPPORTED， 那么当执行到 ServiceB。methodB 时， ServiceA。methodA 的事务挂起，而他以非事务的状态运行完， 再继续 ServiceA。methodA 的事务。</p>
-<h3 id="PROPAGATION-NEVER"><a href="#PROPAGATION-NEVER" class="headerlink" title="PROPAGATION_NEVER"></a>PROPAGATION_NEVER</h3><p>不能在事务中运行。假设 ServiceA。methodA 的事务级别是 PROPAGATION_REQUIRED， 而 ServiceB。methodB 的事务级别是 PROPAGATION_NEVER， 那么 ServiceB。methodB 就要抛出异常了。</p>
-<h3 id="PROPAGATION-NESTED"><a href="#PROPAGATION-NESTED" class="headerlink" title="PROPAGATION_NESTED"></a>PROPAGATION_NESTED</h3><p>理解 Nested 的关键是 savepoint。他与 PROPAGATION_REQUIRES_NEW 的区别是，PROPAGATION_REQUIRES_NEW 另起一个事务，将会与他的父事务相互独立，<br>而 Nested 的事务和他的父事务是相依的，他的提交是要等和他的父事务一块提交的。也就是说，如果父事务最后回滚，他也要回滚的。<br>而 Nested 事务的好处是他有一个 savepoint。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ServiceA &#123;</span><br><span class="line"></span><br><span class="line">// PROPAGATION_REQUIRED</span><br><span class="line">void methodA() &#123;</span><br><span class="line"></span><br><span class="line">try &#123;</span><br><span class="line"></span><br><span class="line">//savepoint</span><br><span class="line"></span><br><span class="line">ServiceB。methodB(); //PROPAGATION_NESTED 级别</span><br><span class="line"></span><br><span class="line">&#125; catch (SomeException) &#123;</span><br><span class="line"></span><br><span class="line">// 执行其他业务， 如 ServiceC。methodC();</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>也就是说 ServiceB。methodB 失败回滚，那么 ServiceA。methodA 也会回滚到 savepoint 点上，ServiceA。methodA 可以选择另外一个分支，比如ServiceC。methodC，继续执行，来尝试完成自己的事务。</p>
+        <p>在平时工作过程中，nginx常常用来做静态资源的代理服务器，例如： 图片、样式等。随着移动时代的到来，对于图片尺寸的要求也越来越多了，以往在图片上传后进行处理的方式已经很难保证日常的需要，很早以前就写过一个关于nginx自动剪裁图片尺寸的配置。</p>
+<h2 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h2><ol>
+<li>安装<a href="https://github.com/openresty/lua-nginx-module/tags" target="_blank" rel="noopener">lua-nginx-module</a></li>
+<li>安装<a href="http://www.graphicsmagick.org/README.html" target="_blank" rel="noopener">GraphicsMagick</a></li>
+</ol>
+<h2 id="nginx配置文件的修改"><a href="#nginx配置文件的修改" class="headerlink" title="nginx配置文件的修改"></a>nginx配置文件的修改</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">    server_name  127.0.0.1;</span><br><span class="line">    root /home/www;</span><br><span class="line"></span><br><span class="line">    location ~* \.(txt|ico)$ &#123;</span><br><span class="line">      root   /home/www/static;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">       alias /home/www/static/assets/;</span><br><span class="line">       expires 30d;</span><br><span class="line">    &#125;</span><br><span class="line">    location ^~ /upload/ &#123;</span><br><span class="line">        root /home/www/static/;</span><br><span class="line">        error_page 404 /upload/default.png;</span><br><span class="line">        if (!-f $file) &#123;</span><br><span class="line">            rewrite &quot;/upload/default.png&quot; last;</span><br><span class="line">        &#125;</span><br><span class="line">        expires max;</span><br><span class="line">        tcp_nodelay off;</span><br><span class="line">        tcp_nopush on;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location /images/ &#123;</span><br><span class="line">        set $image_root /home/www/static/upload;</span><br><span class="line"></span><br><span class="line">        if ($uri !~ &quot;/images/([a-zA-Z\w]+)/([0-9]&#123;4&#125;)/([0-9]&#123;2&#125;)/([0-9]&#123;2&#125;)/([0-9]+).(.*)!(.*)&quot;)&#123;</span><br><span class="line">            rewrite &quot;/images/(.+)&quot; /upload/$1 last;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if ($uri ~* &quot;/images/([a-zA-Z\w]+)/([0-9]&#123;4&#125;)/([0-9]&#123;2&#125;)/([0-9]&#123;2&#125;)/([0-9]+).(.*)!(.*)&quot;)&#123;</span><br><span class="line">            set $filePath &quot;/$1/$2/$3/$4/$5.$6&quot;;</span><br><span class="line">            set $reqPath &quot;/$1/$2/$3/$4/$5.$7&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">        set $file &quot;$image_root$reqPath&quot;;</span><br><span class="line">        if (-f $file) &#123;</span><br><span class="line">            rewrite &quot;/images/(.+)&quot; /upload$reqPath last;</span><br><span class="line">        &#125;</span><br><span class="line">        if (!-f $file) &#123;</span><br><span class="line">            rewrite_by_lua &apos;</span><br><span class="line">                local index = string.find(ngx.var.reqPath, &quot;([0-9]+)x([0-9]+)&quot;);</span><br><span class="line">                local area = string.sub(ngx.var.reqPath, index);</span><br><span class="line">                index = string.find(area, &quot;([.])&quot;);</span><br><span class="line">                size = string.sub(area, 0, index-1);</span><br><span class="line">                local err,command = pcall(function() return &quot;gm convert -resize &quot; .. size .. &quot;! &quot; .. ngx.var.image_root .. ngx.var.filePath .. &quot; &quot; .. ngx.var.file end);</span><br><span class="line">                if err then</span><br><span class="line">                    result = os.execute(command);</span><br><span class="line">                    if result then</span><br><span class="line">                        ngx.redirect(&quot;/upload&quot; .. ngx.var.reqPath);</span><br><span class="line">                    else</span><br><span class="line">                        ngx.redirect(&quot;/upload&quot; .. ngx.var.filePath);</span><br><span class="line">                    end;</span><br><span class="line">                else</span><br><span class="line">                    ngx.redirect(&quot;/upload&quot; .. ngx.var.filePath);</span><br><span class="line">                end;</span><br><span class="line">            &apos;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其实，图片的裁剪工作重头戏就在这个配置文件上，下面来解释一下配置文件。</p>
+<h2 id="配置文件解读"><a href="#配置文件解读" class="headerlink" title="配置文件解读"></a>配置文件解读</h2><h3 id="location-upload"><a href="#location-upload" class="headerlink" title="location ^~ /upload/"></a>location ^~ /upload/</h3><p>此处配置只是单纯的在配置找不到的情况下，将一张默认的图片返回。</p>
+<h3 id="location-images"><a href="#location-images" class="headerlink" title="location /images/"></a>location /images/</h3><p>此处的配置则是进行裁剪的关键</p>
+<ol>
+<li><p>首先，设置一个变量为图片的根目录</p>
+</li>
+<li><p>判断uri是否复合格式</p>
+</li>
+</ol>
+<p>当前图片的访问路径为/images/models/years/month/day/picname.ext!picsize，例如：/images/user/2017/06/30/123456789.png!200x300.png</p>
+<ol>
+<li>将uri用正则表达式切分并赋值</li>
+</ol>
+<p>形成两个参数，以2部分为例：</p>
+<blockquote>
+<p>filePath: /user/2017/06/30/123456789.png<br>reqPath: /user/2017/06/30/123456789.200x300.png</p>
+</blockquote>
+<ol>
+<li>对需要的尺寸图片全路径进行判断，是否有该尺寸图片</li>
+</ol>
+<p>使用上一步定义的两个参数，拼接成目标文件路径并赋值给file：</p>
+<blockquote>
+<p>file: $image_root$reqPath = /home/www/static/upload/user/2017/06/30/123456789.200x300.png</p>
+</blockquote>
+<p>判断文件是否存在，如果存在，直接返回对应文件。</p>
+<ol>
+<li>如果文件不存在，使用lua脚本，进行尺寸转换</li>
+</ol>
+<p>定义lua脚本，获取目标尺寸，并将原图片使用GraphicsMagick转换成目标大小， 也就是将第三步的filePath通过gm covert命令进行裁切，转换成reqPath中的文件。<br>同时，对command执行进行异常捕获，如果遇到异常，则使用原文件，这样可以防止突发情况导致nginx报错，从而没有图片的返回。</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>使用这种方法，可以安全的转换图片到类似于webq等格式，同时，可以使图片尺寸按照需要的得以返回，从而减少了后台对图片进行裁切操作。缺陷在于，第一次访问时，图片的转换可能需要时间，但是，可以通过一些自动化脚本进行第一次图片的常见尺寸访问，从而加快速度。<br>同时，现在也可以使用云存储等手段达到目的。</p>
 
       
     </div>
@@ -387,7 +375,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Java/" rel="tag"># Java</a>
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+            <a href="/tags/Nginx/" rel="tag"># Nginx</a>
           
         </div>
       
@@ -400,14 +390,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/06/13/Java_Tips/" rel="next" title="Java中的一些注意事项收集">
+                <i class="fa fa-chevron-left"></i> Java中的一些注意事项收集
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/06/08/GitLab_CI_Docker/" rel="prev" title="使用GitLab-ci做CI以及部署到Docker环境">
-                使用GitLab-ci做CI以及部署到Docker环境 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/14/Django_Rest_FrameWork/" rel="prev" title="Django Rest FrameWork使用上的一些小技巧">
+                Django Rest FrameWork使用上的一些小技巧 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -551,7 +545,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring事物隔离级别"><span class="nav-number">1.</span> <span class="nav-text">Spring事物隔离级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#隔离级别的简要说明"><span class="nav-number">2.</span> <span class="nav-text">隔离级别的简要说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PROPAGATION-REQUIRED"><span class="nav-number">2.1.</span> <span class="nav-text">PROPAGATION_REQUIRED</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PROPAGATION-SUPPORTS"><span class="nav-number">2.2.</span> <span class="nav-text">PROPAGATION_SUPPORTS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PROPAGATION-MANDATORY"><span class="nav-number">2.3.</span> <span class="nav-text">PROPAGATION_MANDATORY</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PROPAGATION-REQUIRES-NEW"><span class="nav-number">2.4.</span> <span class="nav-text">PROPAGATION_REQUIRES_NEW</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PROPAGATION-NOT-SUPPORTED"><span class="nav-number">2.5.</span> <span class="nav-text">PROPAGATION_NOT_SUPPORTED</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PROPAGATION-NEVER"><span class="nav-number">2.6.</span> <span class="nav-text">PROPAGATION_NEVER</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PROPAGATION-NESTED"><span class="nav-number">2.7.</span> <span class="nav-text">PROPAGATION_NESTED</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前期准备"><span class="nav-number">1.</span> <span class="nav-text">前期准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nginx配置文件的修改"><span class="nav-number">2.</span> <span class="nav-text">nginx配置文件的修改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置文件解读"><span class="nav-number">3.</span> <span class="nav-text">配置文件解读</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#location-upload"><span class="nav-number">3.1.</span> <span class="nav-text">location ^~ /upload/</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#location-images"><span class="nav-number">3.2.</span> <span class="nav-text">location /images/</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后记"><span class="nav-number">4.</span> <span class="nav-text">后记</span></a></li></ol></div>
             
 
           </div>

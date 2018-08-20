@@ -414,6 +414,183 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://c4x.github.io/2017/06/30/Nginx_Cut_image/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Cfour's Blog">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/default_avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cfour's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/06/30/Nginx_Cut_image/" itemprop="url">Nginx剪裁图片</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-30T20:27:15+08:00">2017-06-30</time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在平时工作过程中，nginx常常用来做静态资源的代理服务器，例如： 图片、样式等。随着移动时代的到来，对于图片尺寸的要求也越来越多了，以往在图片上传后进行处理的方式已经很难保证日常的需要，很早以前就写过一个关于nginx自动剪裁图片尺寸的配置。</p>
+<h2 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h2><ol>
+<li>安装<a href="https://github.com/openresty/lua-nginx-module/tags" target="_blank" rel="noopener">lua-nginx-module</a></li>
+<li>安装<a href="http://www.graphicsmagick.org/README.html" target="_blank" rel="noopener">GraphicsMagick</a></li>
+</ol>
+<h2 id="nginx配置文件的修改"><a href="#nginx配置文件的修改" class="headerlink" title="nginx配置文件的修改"></a>nginx配置文件的修改</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">    server_name  127.0.0.1;</span><br><span class="line">    root /home/www;</span><br><span class="line"></span><br><span class="line">    location ~* \.(txt|ico)$ &#123;</span><br><span class="line">      root   /home/www/static;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">       alias /home/www/static/assets/;</span><br><span class="line">       expires 30d;</span><br><span class="line">    &#125;</span><br><span class="line">    location ^~ /upload/ &#123;</span><br><span class="line">        root /home/www/static/;</span><br><span class="line">        error_page 404 /upload/default.png;</span><br><span class="line">        if (!-f $file) &#123;</span><br><span class="line">            rewrite &quot;/upload/default.png&quot; last;</span><br><span class="line">        &#125;</span><br><span class="line">        expires max;</span><br><span class="line">        tcp_nodelay off;</span><br><span class="line">        tcp_nopush on;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location /images/ &#123;</span><br><span class="line">        set $image_root /home/www/static/upload;</span><br><span class="line"></span><br><span class="line">        if ($uri !~ &quot;/images/([a-zA-Z\w]+)/([0-9]&#123;4&#125;)/([0-9]&#123;2&#125;)/([0-9]&#123;2&#125;)/([0-9]+).(.*)!(.*)&quot;)&#123;</span><br><span class="line">            rewrite &quot;/images/(.+)&quot; /upload/$1 last;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if ($uri ~* &quot;/images/([a-zA-Z\w]+)/([0-9]&#123;4&#125;)/([0-9]&#123;2&#125;)/([0-9]&#123;2&#125;)/([0-9]+).(.*)!(.*)&quot;)&#123;</span><br><span class="line">            set $filePath &quot;/$1/$2/$3/$4/$5.$6&quot;;</span><br><span class="line">            set $reqPath &quot;/$1/$2/$3/$4/$5.$7&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">        set $file &quot;$image_root$reqPath&quot;;</span><br><span class="line">        if (-f $file) &#123;</span><br><span class="line">            rewrite &quot;/images/(.+)&quot; /upload$reqPath last;</span><br><span class="line">        &#125;</span><br><span class="line">        if (!-f $file) &#123;</span><br><span class="line">            rewrite_by_lua &apos;</span><br><span class="line">                local index = string.find(ngx.var.reqPath, &quot;([0-9]+)x([0-9]+)&quot;);</span><br><span class="line">                local area = string.sub(ngx.var.reqPath, index);</span><br><span class="line">                index = string.find(area, &quot;([.])&quot;);</span><br><span class="line">                size = string.sub(area, 0, index-1);</span><br><span class="line">                local err,command = pcall(function() return &quot;gm convert -resize &quot; .. size .. &quot;! &quot; .. ngx.var.image_root .. ngx.var.filePath .. &quot; &quot; .. ngx.var.file end);</span><br><span class="line">                if err then</span><br><span class="line">                    result = os.execute(command);</span><br><span class="line">                    if result then</span><br><span class="line">                        ngx.redirect(&quot;/upload&quot; .. ngx.var.reqPath);</span><br><span class="line">                    else</span><br><span class="line">                        ngx.redirect(&quot;/upload&quot; .. ngx.var.filePath);</span><br><span class="line">                    end;</span><br><span class="line">                else</span><br><span class="line">                    ngx.redirect(&quot;/upload&quot; .. ngx.var.filePath);</span><br><span class="line">                end;</span><br><span class="line">            &apos;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其实，图片的裁剪工作重头戏就在这个配置文件上，下面来解释一下配置文件。</p>
+<h2 id="配置文件解读"><a href="#配置文件解读" class="headerlink" title="配置文件解读"></a>配置文件解读</h2><h3 id="location-upload"><a href="#location-upload" class="headerlink" title="location ^~ /upload/"></a>location ^~ /upload/</h3><p>此处配置只是单纯的在配置找不到的情况下，将一张默认的图片返回。</p>
+<h3 id="location-images"><a href="#location-images" class="headerlink" title="location /images/"></a>location /images/</h3><p>此处的配置则是进行裁剪的关键</p>
+<ol>
+<li><p>首先，设置一个变量为图片的根目录</p>
+</li>
+<li><p>判断uri是否复合格式</p>
+</li>
+</ol>
+<p>当前图片的访问路径为/images/models/years/month/day/picname.ext!picsize，例如：/images/user/2017/06/30/123456789.png!200x300.png</p>
+<ol>
+<li>将uri用正则表达式切分并赋值</li>
+</ol>
+<p>形成两个参数，以2部分为例：</p>
+<blockquote>
+<p>filePath: /user/2017/06/30/123456789.png<br>reqPath: /user/2017/06/30/123456789.200x300.png</p>
+</blockquote>
+<ol>
+<li>对需要的尺寸图片全路径进行判断，是否有该尺寸图片</li>
+</ol>
+<p>使用上一步定义的两个参数，拼接成目标文件路径并赋值给file：</p>
+<blockquote>
+<p>file: $image_root$reqPath = /home/www/static/upload/user/2017/06/30/123456789.200x300.png</p>
+</blockquote>
+<p>判断文件是否存在，如果存在，直接返回对应文件。</p>
+<ol>
+<li>如果文件不存在，使用lua脚本，进行尺寸转换</li>
+</ol>
+<p>定义lua脚本，获取目标尺寸，并将原图片使用GraphicsMagick转换成目标大小， 也就是将第三步的filePath通过gm covert命令进行裁切，转换成reqPath中的文件。<br>同时，对command执行进行异常捕获，如果遇到异常，则使用原文件，这样可以防止突发情况导致nginx报错，从而没有图片的返回。</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>使用这种方法，可以安全的转换图片到类似于webq等格式，同时，可以使图片尺寸按照需要的得以返回，从而减少了后台对图片进行裁切操作。缺陷在于，第一次访问时，图片的转换可能需要时间，但是，可以通过一些自动化脚本进行第一次图片的常见尺寸访问，从而加快速度。<br>同时，现在也可以使用云存储等手段达到目的。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://c4x.github.io/2017/06/13/Java_Tips/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1041,7 +1218,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1063,7 +1240,7 @@
                 
                 <div class="site-state-item site-state-tags">
                   <a href="/tags/index.html">
-                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-count">10</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
