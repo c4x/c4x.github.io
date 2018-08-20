@@ -116,7 +116,7 @@
 
 
 
-  <title>标签: Linux | Cfour's Blog</title>
+  <title>Java中的一些注意事项收集 | Cfour's Blog</title>
   
 
 
@@ -135,7 +135,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     
@@ -219,58 +219,192 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>Linux<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
+
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://c4x.github.io/2017/06/13/Java_Tips/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Cfour's Blog">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/default_avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cfour's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2017/06/08/GitLab_CI_Docker/" itemprop="url">
-              
-                <span itemprop="name">使用GitLab-ci做CI以及部署到Docker环境</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Java中的一些注意事项收集</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-06-08T15:27:15+08:00"
-              content="2017-06-08" >
-          06-08
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-13T15:27:15+08:00">2017-06-13</time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Null-的过度使用"><a href="#Null-的过度使用" class="headerlink" title="Null 的过度使用"></a>Null 的过度使用</h2><p>避免过度使用 null 值是一个最佳实践。例如，更好的做法是让方法返回空的 array 或者 collection 而不是 null 值，因为这样可以防止程序抛出 NullPointerException。例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; pics = album.getPics();  </span><br><span class="line"><span class="keyword">for</span> (String pic : pics) &#123;  </span><br><span class="line">    processPic(pic);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果此时album没有任何图片，在getPics()的时候将会返回一个null，程序也会抛出NullPointerException。因此需要加入空检查来解决这个问题。如果将返回的 null 值替换成一个空的 list，那么 NullPointerException 也不会出现。而且，因为我们不再需要对变量 accountId 做空检查，代码将变得更加简洁。</p>
+<p>在Java8中，可以使用 Optional 类型，它既可以是一个空对象，也可以是一些值的封装。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Optional&lt;String&gt; optionalString = Optional.ofNullable(nullableString);  </span><br><span class="line"><span class="keyword">if</span>(optionalString.isPresent()) &#123;  </span><br><span class="line">    System.out.println(optionalString.get());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="并发修改"><a href="#并发修改" class="headerlink" title="并发修改"></a>并发修改</h2><p>如果要删除List中的某个元素应该怎么做？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">List&lt;IHat&gt; hats = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"><span class="keyword">for</span> (IHat hat : hats) &#123;</span><br><span class="line">    <span class="keyword">if</span> (hat.hasEarFlaps()) &#123;</span><br><span class="line">        hats.remove(hat);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有的新人会选择这样做，实际上这样做会获得一个ConcurrentModificationException异常，因为代码在遍历这个集合的同时对其进行修改。<br>直接的解决方案是将要删除的元素放进一个 list，之后用另一个循环删除它。不过这需要一个额外的集合来存放将要被删除的元素。<br>另一种方法是使用Iterator.remove：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Iterator&lt;IHat&gt; hatIterator = hats.iterator();  </span><br><span class="line"><span class="keyword">while</span> (hatIterator.hasNext()) &#123;  </span><br><span class="line">    IHat hat = hatIterator.next();</span><br><span class="line">    <span class="keyword">if</span> (hat.hasEarFlaps()) &#123;</span><br><span class="line">        hatIterator.remove();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在Java8中，可以使用List.removeIf 方法。</p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/Tips/" rel="tag"># Tips</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/08/GitLab_CI_Docker/" rel="next" title="使用GitLab-ci做CI以及部署到Docker环境">
+                <i class="fa fa-chevron-left"></i> 使用GitLab-ci做CI以及部署到Docker环境
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/14/Django_Rest_FrameWork/" rel="prev" title="Django Rest FrameWork使用上的一些小技巧">
+                Django Rest FrameWork使用上的一些小技巧 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
           
+
+  
+
+
 
         </div>
         
@@ -291,8 +425,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -366,6 +509,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Null-的过度使用"><span class="nav-number">1.</span> <span class="nav-text">Null 的过度使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#并发修改"><span class="nav-number">2.</span> <span class="nav-text">并发修改</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -490,6 +649,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.1"></script>
+
+
 
   
 

@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.1" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="分类">
+<meta property="og:url" content="http://c4x.github.io/categories/index.html">
+<meta property="og:site_name" content="Cfour&#39;s Blog">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-12T09:42:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="分类">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://c4x.github.io/categories/"/>
+
+
+
+
+
+  <title>Django Rest FrameWork使用上的一些小技巧 | Cfour's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Cfour's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Cfour's Blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+          首页</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+          标签</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+          分类</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+          归档</a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://c4x.github.io/2018/08/14/Django_Rest_FrameWork/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Cfour's Blog">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/default_avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cfour's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Django Rest FrameWork使用上的一些小技巧</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-14T15:27:15+08:00">2018-08-14</time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/Django/" itemprop="url" rel="index">
+                    <span itemprop="name">Django</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>不得不说Django Rest FrameWork使用还是很方便的，但是在日常中，经常遇到一些小问题让人头痛，索性专门开个文章，来一一记录日常遇到的一些问题和解决方法：</p>
+<h2 id="serializer的字符串数组问题"><a href="#serializer的字符串数组问题" class="headerlink" title="serializer的字符串数组问题"></a>serializer的字符串数组问题</h2><p>在Django中，如果你的Model有一个ForeignKey的关联，并且你在Api做查询时将这个关联以prefetch_related形式全部查询出来了，最典型的就是图集：<br>例:<br>在model中定义：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ModelA</span><span class="params">(models.Model)</span>:</span></span><br><span class="line">    name = models.CharField(<span class="string">u'xxxx'</span>, max_length=<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ModelB</span><span class="params">(models.Model)</span>:</span></span><br><span class="line">    modela = models.ForeignKey(ModelA, verbose_name=<span class="string">u'oooo'</span>, related_name=<span class="string">'pics'</span>)</span><br><span class="line">    pic = models.ImageField(<span class="string">u'图'</span>, upload_to=<span class="string">''</span>, max_length=<span class="number">100</span>,blank=<span class="keyword">True</span>, null=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure>
+<p>在Api中：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ModelAApiView</span><span class="params">(generics.RetrieveAPIView)</span>:</span></span><br><span class="line">    serializer_class = ModelASerializer</span><br><span class="line">    queryset = ModelA.objects.all().prefetch_related(<span class="string">"pics"</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ModelBSerializer</span><span class="params">(serializers.ModelSerializer)</span>:</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        model = ModelB</span><br><span class="line">        fields = (<span class="string">'pic'</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ModelASerializer</span><span class="params">(serializers.ModelSerializer)</span>:</span></span><br><span class="line">    pics = ModelBSerializer(many=<span class="keyword">True</span>)</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        model = ModelA</span><br><span class="line">        fields = (<span class="string">'name'</span>, <span class="string">'pics'</span>)</span><br></pre></td></tr></table></figure>
+<p>这是通常的作坊，将ForeignKey的关联对象全部转换到主对象的json里面去，对应会生成的json就像这样：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"name"</span>:<span class="string">""</span>,</span><br><span class="line">    <span class="attr">"pics"</span>:[</span><br><span class="line">        &#123;<span class="attr">"pic"</span>:<span class="string">"xxxx.jpg"</span>&#125;,&#123;<span class="attr">"pic"</span>:<span class="string">"oooo.jpg"</span>&#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通常来说，这样就已经完结了，直到有一天，Android的小伙伴说，如果pic只是传一个图片地址的话，为什么不直接通过json的数组传递过来，还要通过数组-对象的形式传递呢。<br>后来，通过查找<a href="https://www.django-rest-framework.org/api-guide/relations/" target="_blank" rel="noopener">Rest FrameWork</a>，我找到了方法。可以改写ModelASerializer为</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ModelASerializer</span><span class="params">(serializers.ModelSerializer)</span>:</span></span><br><span class="line">    pics = serializers.StringRelatedField(many=<span class="keyword">True</span>)</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        model = ModelA</span><br><span class="line">        fields = (<span class="string">'name'</span>, <span class="string">'pics'</span>)</span><br></pre></td></tr></table></figure>
+<p>这样，pics序列化出来就不是数组-对象而变成了数组，同时将使用对象的 <em><strong>unicode</strong></em> 方法。 之后json会变为：<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"name"</span>:<span class="string">""</span>,</span><br><span class="line">    <span class="attr">"pics"</span>:[</span><br><span class="line">        <span class="string">"xxxx.jpg"</span>,<span class="string">"oooo.jpg"</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Token的失效问题"><a href="#Token的失效问题" class="headerlink" title="Token的失效问题"></a>Token的失效问题</h2><p>在Rest FrameWork中，TokenAuthentication是通过数据库表来存储的。 同时，它只记录了Token，Created， 如果，我们需要给一个Token设置过期时间，可以这样办：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime,timedelta</span><br><span class="line"><span class="keyword">from</span> rest_framework.authentication <span class="keyword">import</span> TokenAuthentication</span><br><span class="line"><span class="keyword">from</span> rest_framework <span class="keyword">import</span> exceptions</span><br><span class="line"><span class="keyword">from</span> django.conf <span class="keyword">import</span> settings</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExpiringTokenAuthentication</span><span class="params">(TokenAuthentication)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">authenticate_credentials</span><span class="params">(self, key)</span>:</span></span><br><span class="line">        model = self.get_model()</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            token = model.objects.get(key=key)</span><br><span class="line">        <span class="keyword">except</span> model.DoesNotExist:</span><br><span class="line">            <span class="keyword">raise</span> exceptions.AuthenticationFailed(<span class="string">'Invalid token.'</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> token.user.is_active:</span><br><span class="line">            <span class="keyword">raise</span> exceptions.AuthenticationFailed(<span class="string">'User inactive or deleted.'</span>)</span><br><span class="line">        now = datetime.now()</span><br><span class="line">        <span class="keyword">if</span> token.created &lt; now - timedelta(seconds=settings.SESSION_COOKIE_AGE):</span><br><span class="line">            <span class="keyword">raise</span> exceptions.AuthenticationFailed(<span class="string">'Token has expired'</span>)</span><br><span class="line">        <span class="keyword">if</span> token.created + timedelta(seconds=settings.SESSION_UPDATE_AGE) &lt; now:</span><br><span class="line">            token.created = now</span><br><span class="line">            token.save(update_fields=[<span class="string">'created'</span>])</span><br><span class="line">        <span class="keyword">return</span> (token.user, token)</span><br></pre></td></tr></table></figure>
+<p>同时，在setting中配置：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">REST_FRAMEWORK = &#123;</span><br><span class="line">    <span class="string">'DEFAULT_AUTHENTICATION_CLASSES'</span>: (</span><br><span class="line">        <span class="string">'apps.common.authentication.ExpiringTokenAuthentication'</span>,</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line">SESSION_COOKIE_AGE=<span class="number">3600</span></span><br></pre></td></tr></table></figure>
+<p>这样，在每次请求过来之后，就能够去刷新token的时间，并保证过期的token不被认证。 当然， 以上代码也可以改造成使用redis的方式。</p>
+<h2 id="prefetch-related的条件搜索"><a href="#prefetch-related的条件搜索" class="headerlink" title="prefetch_related的条件搜索"></a>prefetch_related的条件搜索</h2><p>当使用prefetch_related时，Django默认是进行了所有关联对象的取出操作，以一个相册为例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PhotoAlbum</span><span class="params">(models.Model)</span>:</span></span><br><span class="line">    title = models.CharField(max_length=<span class="number">128</span>)</span><br><span class="line">    author = models.CharField(max_length=<span class="number">128</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Photo</span><span class="params">(models.Model)</span>:</span></span><br><span class="line">    album = models.ForeignKey(<span class="string">'PhotoAlbum'</span>)</span><br><span class="line">    status = models.BooleanField(default=<span class="keyword">False</span>)</span><br></pre></td></tr></table></figure>
+<p>当需要筛选出author为Davey Jones的所有图片时，一般使用</p>
+<blockquote>
+<p>PhotoAlbum.objects.filter(author=”Davey Jones”).prefetch_related(“photo_set”)</p>
+</blockquote>
+<p>此时，如果需要筛选出所有有效的图片，一般不得不进行一次循环或者表推导。<br>当Django版本大于1.7时，有一个推荐的对象<a href="https://docs.djangoproject.com/en/2.1/ref/models/querysets/#django.db.models.Prefetch" target="_blank" rel="noopener">Prefetch</a>，进行如下搜索</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">PhotoAlbum.objects.filter(author=<span class="string">"Davey Jones"</span>).prefetch_related(</span><br><span class="line">    Prefetch(</span><br><span class="line">        <span class="string">"photo_set"</span>,</span><br><span class="line">        queryset=Photo.objects.filter(status=<span class="keyword">True</span>)</span><br><span class="line">    )</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h2 id="APIView中进行分页"><a href="#APIView中进行分页" class="headerlink" title="APIView中进行分页"></a>APIView中进行分页</h2><p>如果使用generics.ListAPIView进行分页，详细很多人都应该知道直接实现对应的get_queryset方法以及实现对应的Serializer对象就可以了。但是如果要使用APIView呢？首先，实现一个类：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PaginationAPIView</span><span class="params">(APIView)</span>:</span></span><br><span class="line">    pagination_class = LimitOffsetPagination</span><br><span class="line"></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">paginator</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> hasattr(self, <span class="string">'_paginator'</span>):</span><br><span class="line">            <span class="keyword">if</span> self.pagination_class <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">                self._paginator = <span class="keyword">None</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                self._paginator = self.pagination_class()</span><br><span class="line">        <span class="keyword">return</span> self._paginator</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">paginate_queryset</span><span class="params">(self, queryset)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> self.paginator <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line">        <span class="keyword">return</span> self.paginator.paginate_queryset(queryset, self.request, view=self)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_paginated_response</span><span class="params">(self, data)</span>:</span></span><br><span class="line">        <span class="keyword">assert</span> self.paginator <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span></span><br><span class="line">        <span class="keyword">return</span> self.paginator.get_paginated_response(data)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyView</span><span class="params">(APIView)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self,request,*args,**kwargs)</span>:</span></span><br><span class="line">        queryset = ....</span><br><span class="line">        page = self.paginate_queryset(queryset)</span><br><span class="line">        serializer = Serializer(page, many=<span class="keyword">True</span>)</span><br><span class="line">        <span class="keyword">return</span> self.get_paginated_response(serializer.data)</span><br></pre></td></tr></table></figure>
+<p>这样，就可以在使用APIView对结果进行分页处理</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+            <a href="/tags/Django/" rel="tag"># Django</a>
+          
+            <a href="/tags/Django-Rest-FrameWork/" rel="tag"># Django Rest FrameWork</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/13/Java_Tips/" rel="next" title="Java中的一些注意事项收集">
+                <i class="fa fa-chevron-left"></i> Java中的一些注意事项收集
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/default_avatar.png"
+                alt="Cfour's Blog" />
+            
+              <p class="site-author-name" itemprop="name">Cfour's Blog</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/c4x" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#serializer的字符串数组问题"><span class="nav-number">1.</span> <span class="nav-text">serializer的字符串数组问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Token的失效问题"><span class="nav-number">2.</span> <span class="nav-text">Token的失效问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#prefetch-related的条件搜索"><span class="nav-number">3.</span> <span class="nav-text">prefetch_related的条件搜索</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#APIView中进行分页"><span class="nav-number">4.</span> <span class="nav-text">APIView中进行分页</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Cfour's Blog</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Muse</a> v6.0.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.1"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

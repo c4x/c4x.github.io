@@ -80,7 +80,7 @@
 <meta property="og:url" content="http://c4x.github.io/categories/index.html">
 <meta property="og:site_name" content="Cfour&#39;s Blog">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-12T09:42:17.587Z">
+<meta property="og:updated_time" content="2018-01-12T09:42:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分类">
 
@@ -181,6 +181,20 @@
         </li>
       
         
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+          标签</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+          分类</a>
+        </li>
+      
+        
         <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
             <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
@@ -206,6 +220,335 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://c4x.github.io/2018/08/14/Django_Rest_FrameWork/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Cfour's Blog">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/default_avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cfour's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/14/Django_Rest_FrameWork/" itemprop="url">Django Rest FrameWork使用上的一些小技巧</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-14T15:27:15+08:00">2018-08-14</time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/Django/" itemprop="url" rel="index">
+                    <span itemprop="name">Django</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>不得不说Django Rest FrameWork使用还是很方便的，但是在日常中，经常遇到一些小问题让人头痛，索性专门开个文章，来一一记录日常遇到的一些问题和解决方法：</p>
+<h2 id="serializer的字符串数组问题"><a href="#serializer的字符串数组问题" class="headerlink" title="serializer的字符串数组问题"></a>serializer的字符串数组问题</h2><p>在Django中，如果你的Model有一个ForeignKey的关联，并且你在Api做查询时将这个关联以prefetch_related形式全部查询出来了，最典型的就是图集：<br>例:<br>在model中定义：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ModelA</span><span class="params">(models.Model)</span>:</span></span><br><span class="line">    name = models.CharField(<span class="string">u'xxxx'</span>, max_length=<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ModelB</span><span class="params">(models.Model)</span>:</span></span><br><span class="line">    modela = models.ForeignKey(ModelA, verbose_name=<span class="string">u'oooo'</span>, related_name=<span class="string">'pics'</span>)</span><br><span class="line">    pic = models.ImageField(<span class="string">u'图'</span>, upload_to=<span class="string">''</span>, max_length=<span class="number">100</span>,blank=<span class="keyword">True</span>, null=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure>
+<p>在Api中：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ModelAApiView</span><span class="params">(generics.RetrieveAPIView)</span>:</span></span><br><span class="line">    serializer_class = ModelASerializer</span><br><span class="line">    queryset = ModelA.objects.all().prefetch_related(<span class="string">"pics"</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ModelBSerializer</span><span class="params">(serializers.ModelSerializer)</span>:</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        model = ModelB</span><br><span class="line">        fields = (<span class="string">'pic'</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ModelASerializer</span><span class="params">(serializers.ModelSerializer)</span>:</span></span><br><span class="line">    pics = ModelBSerializer(many=<span class="keyword">True</span>)</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        model = ModelA</span><br><span class="line">        fields = (<span class="string">'name'</span>, <span class="string">'pics'</span>)</span><br></pre></td></tr></table></figure>
+<p>这是通常的作坊，将ForeignKey的关联对象全部转换到主对象的json里面去，对应会生成的json就像这样：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"name"</span>:<span class="string">""</span>,</span><br><span class="line">    <span class="attr">"pics"</span>:[</span><br><span class="line">        &#123;<span class="attr">"pic"</span>:<span class="string">"xxxx.jpg"</span>&#125;,&#123;<span class="attr">"pic"</span>:<span class="string">"oooo.jpg"</span>&#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通常来说，这样就已经完结了，直到有一天，Android的小伙伴说，如果pic只是传一个图片地址的话，为什么不直接通过json的数组传递过来，还要通过数组-对象的形式传递呢。<br>后来，通过查找<a href="https://www.django-rest-framework.org/api-guide/relations/" target="_blank" rel="noopener">Rest FrameWork</a>，我找到了方法。可以改写ModelASerializer为</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ModelASerializer</span><span class="params">(serializers.ModelSerializer)</span>:</span></span><br><span class="line">    pics = serializers.StringRelatedField(many=<span class="keyword">True</span>)</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        model = ModelA</span><br><span class="line">        fields = (<span class="string">'name'</span>, <span class="string">'pics'</span>)</span><br></pre></td></tr></table></figure>
+<p>这样，pics序列化出来就不是数组-对象而变成了数组，同时将使用对象的 <em><strong>unicode</strong></em> 方法。 之后json会变为：<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"name"</span>:<span class="string">""</span>,</span><br><span class="line">    <span class="attr">"pics"</span>:[</span><br><span class="line">        <span class="string">"xxxx.jpg"</span>,<span class="string">"oooo.jpg"</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Token的失效问题"><a href="#Token的失效问题" class="headerlink" title="Token的失效问题"></a>Token的失效问题</h2><p>在Rest FrameWork中，TokenAuthentication是通过数据库表来存储的。 同时，它只记录了Token，Created， 如果，我们需要给一个Token设置过期时间，可以这样办：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime,timedelta</span><br><span class="line"><span class="keyword">from</span> rest_framework.authentication <span class="keyword">import</span> TokenAuthentication</span><br><span class="line"><span class="keyword">from</span> rest_framework <span class="keyword">import</span> exceptions</span><br><span class="line"><span class="keyword">from</span> django.conf <span class="keyword">import</span> settings</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExpiringTokenAuthentication</span><span class="params">(TokenAuthentication)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">authenticate_credentials</span><span class="params">(self, key)</span>:</span></span><br><span class="line">        model = self.get_model()</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            token = model.objects.get(key=key)</span><br><span class="line">        <span class="keyword">except</span> model.DoesNotExist:</span><br><span class="line">            <span class="keyword">raise</span> exceptions.AuthenticationFailed(<span class="string">'Invalid token.'</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> token.user.is_active:</span><br><span class="line">            <span class="keyword">raise</span> exceptions.AuthenticationFailed(<span class="string">'User inactive or deleted.'</span>)</span><br><span class="line">        now = datetime.now()</span><br><span class="line">        <span class="keyword">if</span> token.created &lt; now - timedelta(seconds=settings.SESSION_COOKIE_AGE):</span><br><span class="line">            <span class="keyword">raise</span> exceptions.AuthenticationFailed(<span class="string">'Token has expired'</span>)</span><br><span class="line">        <span class="keyword">if</span> token.created + timedelta(seconds=settings.SESSION_UPDATE_AGE) &lt; now:</span><br><span class="line">            token.created = now</span><br><span class="line">            token.save(update_fields=[<span class="string">'created'</span>])</span><br><span class="line">        <span class="keyword">return</span> (token.user, token)</span><br></pre></td></tr></table></figure>
+<p>同时，在setting中配置：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">REST_FRAMEWORK = &#123;</span><br><span class="line">    <span class="string">'DEFAULT_AUTHENTICATION_CLASSES'</span>: (</span><br><span class="line">        <span class="string">'apps.common.authentication.ExpiringTokenAuthentication'</span>,</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line">SESSION_COOKIE_AGE=<span class="number">3600</span></span><br></pre></td></tr></table></figure>
+<p>这样，在每次请求过来之后，就能够去刷新token的时间，并保证过期的token不被认证。 当然， 以上代码也可以改造成使用redis的方式。</p>
+<h2 id="prefetch-related的条件搜索"><a href="#prefetch-related的条件搜索" class="headerlink" title="prefetch_related的条件搜索"></a>prefetch_related的条件搜索</h2><p>当使用prefetch_related时，Django默认是进行了所有关联对象的取出操作，以一个相册为例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PhotoAlbum</span><span class="params">(models.Model)</span>:</span></span><br><span class="line">    title = models.CharField(max_length=<span class="number">128</span>)</span><br><span class="line">    author = models.CharField(max_length=<span class="number">128</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Photo</span><span class="params">(models.Model)</span>:</span></span><br><span class="line">    album = models.ForeignKey(<span class="string">'PhotoAlbum'</span>)</span><br><span class="line">    status = models.BooleanField(default=<span class="keyword">False</span>)</span><br></pre></td></tr></table></figure>
+<p>当需要筛选出author为Davey Jones的所有图片时，一般使用</p>
+<blockquote>
+<p>PhotoAlbum.objects.filter(author=”Davey Jones”).prefetch_related(“photo_set”)</p>
+</blockquote>
+<p>此时，如果需要筛选出所有有效的图片，一般不得不进行一次循环或者表推导。<br>当Django版本大于1.7时，有一个推荐的对象<a href="https://docs.djangoproject.com/en/2.1/ref/models/querysets/#django.db.models.Prefetch" target="_blank" rel="noopener">Prefetch</a>，进行如下搜索</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">PhotoAlbum.objects.filter(author=<span class="string">"Davey Jones"</span>).prefetch_related(</span><br><span class="line">    Prefetch(</span><br><span class="line">        <span class="string">"photo_set"</span>,</span><br><span class="line">        queryset=Photo.objects.filter(status=<span class="keyword">True</span>)</span><br><span class="line">    )</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h2 id="APIView中进行分页"><a href="#APIView中进行分页" class="headerlink" title="APIView中进行分页"></a>APIView中进行分页</h2><p>如果使用generics.ListAPIView进行分页，详细很多人都应该知道直接实现对应的get_queryset方法以及实现对应的Serializer对象就可以了。但是如果要使用APIView呢？首先，实现一个类：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PaginationAPIView</span><span class="params">(APIView)</span>:</span></span><br><span class="line">    pagination_class = LimitOffsetPagination</span><br><span class="line"></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">paginator</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> hasattr(self, <span class="string">'_paginator'</span>):</span><br><span class="line">            <span class="keyword">if</span> self.pagination_class <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">                self._paginator = <span class="keyword">None</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                self._paginator = self.pagination_class()</span><br><span class="line">        <span class="keyword">return</span> self._paginator</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">paginate_queryset</span><span class="params">(self, queryset)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> self.paginator <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line">        <span class="keyword">return</span> self.paginator.paginate_queryset(queryset, self.request, view=self)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_paginated_response</span><span class="params">(self, data)</span>:</span></span><br><span class="line">        <span class="keyword">assert</span> self.paginator <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span></span><br><span class="line">        <span class="keyword">return</span> self.paginator.get_paginated_response(data)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyView</span><span class="params">(APIView)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self,request,*args,**kwargs)</span>:</span></span><br><span class="line">        queryset = ....</span><br><span class="line">        page = self.paginate_queryset(queryset)</span><br><span class="line">        serializer = Serializer(page, many=<span class="keyword">True</span>)</span><br><span class="line">        <span class="keyword">return</span> self.get_paginated_response(serializer.data)</span><br></pre></td></tr></table></figure>
+<p>这样，就可以在使用APIView对结果进行分页处理</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://c4x.github.io/2017/06/13/Java_Tips/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Cfour's Blog">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/default_avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cfour's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/06/13/Java_Tips/" itemprop="url">Java中的一些注意事项收集</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-13T15:27:15+08:00">2017-06-13</time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Null-的过度使用"><a href="#Null-的过度使用" class="headerlink" title="Null 的过度使用"></a>Null 的过度使用</h2><p>避免过度使用 null 值是一个最佳实践。例如，更好的做法是让方法返回空的 array 或者 collection 而不是 null 值，因为这样可以防止程序抛出 NullPointerException。例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; pics = album.getPics();  </span><br><span class="line"><span class="keyword">for</span> (String pic : pics) &#123;  </span><br><span class="line">    processPic(pic);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果此时album没有任何图片，在getPics()的时候将会返回一个null，程序也会抛出NullPointerException。因此需要加入空检查来解决这个问题。如果将返回的 null 值替换成一个空的 list，那么 NullPointerException 也不会出现。而且，因为我们不再需要对变量 accountId 做空检查，代码将变得更加简洁。</p>
+<p>在Java8中，可以使用 Optional 类型，它既可以是一个空对象，也可以是一些值的封装。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Optional&lt;String&gt; optionalString = Optional.ofNullable(nullableString);  </span><br><span class="line"><span class="keyword">if</span>(optionalString.isPresent()) &#123;  </span><br><span class="line">    System.out.println(optionalString.get());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="并发修改"><a href="#并发修改" class="headerlink" title="并发修改"></a>并发修改</h2><p>如果要删除List中的某个元素应该怎么做？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">List&lt;IHat&gt; hats = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"><span class="keyword">for</span> (IHat hat : hats) &#123;</span><br><span class="line">    <span class="keyword">if</span> (hat.hasEarFlaps()) &#123;</span><br><span class="line">        hats.remove(hat);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有的新人会选择这样做，实际上这样做会获得一个ConcurrentModificationException异常，因为代码在遍历这个集合的同时对其进行修改。<br>直接的解决方案是将要删除的元素放进一个 list，之后用另一个循环删除它。不过这需要一个额外的集合来存放将要被删除的元素。<br>另一种方法是使用Iterator.remove：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Iterator&lt;IHat&gt; hatIterator = hats.iterator();  </span><br><span class="line"><span class="keyword">while</span> (hatIterator.hasNext()) &#123;  </span><br><span class="line">    IHat hat = hatIterator.next();</span><br><span class="line">    <span class="keyword">if</span> (hat.hasEarFlaps()) &#123;</span><br><span class="line">        hatIterator.remove();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在Java8中，可以使用List.removeIf 方法。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
     
       
 
@@ -325,34 +668,34 @@
         
           
             <h2 id="使用GitLab-ci做CI以及部署到Docker环境"><a href="#使用GitLab-ci做CI以及部署到Docker环境" class="headerlink" title="使用GitLab-ci做CI以及部署到Docker环境"></a>使用GitLab-ci做CI以及部署到Docker环境</h2><p>最近在尝试通过gitlab-ci-runner进行项目的test，build。并将build之后的项目发布到一个docker容器中，作为测试环境。</p>
-<p>不妨先定一个小目标，建立一个Django项目，不使用任何数据库，只输出一个“Hello, world.”在页面。我的目标就是，在项目提交到gitlab上的时候，gitlab-ci-runner将会执行Django的test，在test通过之后，形成一个待执行操作，如果选择该操作，这个项目将会被部署到docker的一个容器中去。</p>
+<p>不妨先定一个小目标，建立一个Django项目，不使用任何数据库，只输出一个“Hello， world。”在页面。我的目标就是，在项目提交到gitlab上的时候，gitlab-ci-runner将会执行Django的test，在test通过之后，形成一个待执行操作，如果选择该操作，这个项目将会被部署到docker的一个容器中去。</p>
 <hr>
-<h3 id="Gitlab-ci-runner"><a href="#Gitlab-ci-runner" class="headerlink" title="Gitlab-ci-runner"></a>Gitlab-ci-runner</h3><h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>先了解一下什么叫做<a href="https://docs.gitlab.com.cn/ce/ci/quick_start/README.html" target="_blank" rel="noopener">Runner</a></p>
+<h2 id="Gitlab-ci-runner"><a href="#Gitlab-ci-runner" class="headerlink" title="Gitlab-ci-runner"></a>Gitlab-ci-runner</h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>先了解一下什么叫做<a href="https://docs。gitlab。com。cn/ce/ci/quick_start/README。html" target="_blank" rel="noopener">Runner</a></p>
 <blockquote>
-<p>GitLab提供可持续集成服务。只要在你的仓库根目录 [创建一个.gitlab-ci.yml 文件][yaml语法]， 并为该项目指派一个Runner，当有合并请求或者 push的时候就会触发CI pipeline。</p>
+<p>GitLab提供可持续集成服务。只要在你的仓库根目录 [创建一个。gitlab-ci。yml 文件][yaml语法]， 并为该项目指派一个Runner，当有合并请求或者 push的时候就会触发CI pipeline。</p>
 </blockquote>
 <p>所以，将分成这样几个步骤：</p>
-<pre><code>1.首先应该安装一个Runner，并将它注册到Gitlab里面去。
-2.为项目增加一個.gitlab-ci.yml文件，然后push到项目里面。
-</code></pre><p>安装Runner，可以看<a href="https://docs.gitlab.com.cn/runner/" target="_blank" rel="noopener">这里</a>。<br>对了，由于国内不可抗拒的原因，所以发一個<a href="https://mirror.tuna.tsinghua.edu.cn/help/gitlab-ce/" target="_blank" rel="noopener">清华大学开源软件镜像站</a>给大家。</p>
+<pre><code>1。首先应该安装一个Runner，并将它注册到Gitlab里面去。
+2。为项目增加一個。gitlab-ci。yml文件，然后push到项目里面。
+</code></pre><p>安装Runner，可以看<a href="https://docs。gitlab。com。cn/runner/" target="_blank" rel="noopener">这里</a>。<br>对了，由于国内不可抗拒的原因，所以发一個<a href="https://mirror。tuna。tsinghua。edu。cn/help/gitlab-ce/" target="_blank" rel="noopener">清华大学开源软件镜像站</a>给大家。</p>
 <p>現在，假设各位都安装好了Gitlab和Gitlab-ci-runner，並且已运行行好了Gitlab。</p>
-<h4 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h4><p>现在，我们将runner注册到Gitlab中去：<br>在gitlab中，找到runner的token，</p>
-<img src="/2017/06/08/GitLab_CI_Docker/runnerconfig.png" title="[runnerconfig]">
-<p>register的时候需要使用到ci server，以及token，ci server在gitlab 8以上以及集成到了gitlab中，地址时 <a href="http://doman.com/ci" target="_blank" rel="noopener">http://doman.com/ci</a> , 以本机为例就是 <a href="http://localhost/ci" target="_blank" rel="noopener">http://localhost/ci</a> , 然后运行：</p>
+<h3 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h3><p>现在，我们将runner注册到Gitlab中去：<br>在gitlab中，找到runner的token，</p>
+
+<p>register的时候需要使用到ci server，以及token，ci server在gitlab 8以上以及集成到了gitlab中，地址时 <a href="http://doman。com/ci" target="_blank" rel="noopener">http://doman。com/ci</a> ， 以本机为例就是 <a href="http://localhost/ci" target="_blank" rel="noopener">http://localhost/ci</a> ， 然后运行：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-ci-multi-runner register</span><br></pre></td></tr></table></figure>
-<p>在这里，命令行会要求你提供ci server地址，token，以及为runner取一个tags。其次，还有诸如是否可以运行untagged等选择。这里，为了方便测试runner先将untagged选择为true。然后，选择runner executor，<a href="https://docs.gitlab.com/runner/executors/#selecting-the-executor" target="_blank" rel="noopener">executor</a>有很多种，这里主要说两种：</p>
-<pre><code>1.Shell， shell表示在runner运行时，将会以当前机器的Base环境来运行build操作。
-2.docker， docker表示在构建时，runner会按照.gitlab-ci.yml里面指定的images去创建一个docker容器，并运行构建。
+<p>在这里，命令行会要求你提供ci server地址，token，以及为runner取一个tags。其次，还有诸如是否可以运行untagged等选择。这里，为了方便测试runner先将untagged选择为true。然后，选择runner executor，<a href="https://docs。gitlab。com/runner/executors/#selecting-the-executor" target="_blank" rel="noopener">executor</a>有很多种，这里主要说两种：</p>
+<pre><code>1。Shell， shell表示在runner运行时，将会以当前机器的Base环境来运行build操作。
+2。docker， docker表示在构建时，runner会按照。gitlab-ci。yml里面指定的images去创建一个docker容器，并运行构建。
 </code></pre><p>这里，我选择的是shell。这样，一个基本的runner已经被注册到了gitlab中，当以这种方式注册runner时，runner被申明为Shared Runners，另外还有一个Specific Runners，Shared Runners可以理解为全局使用的runner，而另外一个是为了满足某些特殊的项目而启动的runner，能够在project-&gt;setting里面注册。</p>
 <p>另外，注意一点，所有shell-runner执行的命令都是以gitlab-runner或者gitlab_ci_multi_runner来运行的。所以，为了使用docker，要将gitlab-runner加入到docker用户组中：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usermod -aG docker gitlab-runner</span><br></pre></td></tr></table></figure>
 <hr>
-<h3 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h3><p>Docker的安装就不介绍了，为了方便介绍，只贴一下我build一个python3的Dockerfile吧：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">FROM ubuntu:16.04</span><br><span class="line">MAINTAINER cfour chenxin0530@gmail.com</span><br><span class="line">RUN sed -i &apos;s/http:\/\/archive\.ubuntu\.com\/ubuntu\//http:\/\/mirrors\.163\.com\/ubuntu\//g&apos; /etc/apt/sources.list</span><br><span class="line">RUN apt-get -y update &amp;&amp; apt-get install -y \</span><br><span class="line">git \</span><br><span class="line">python3 \</span><br><span class="line">python3-pip \</span><br><span class="line">unzip \</span><br><span class="line">fabric</span><br></pre></td></tr></table></figure>
-<p>在docker上，只简单的安装了git，python3, pip3, fabric以及unzip。</p>
+<h2 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h2><p>Docker的安装就不介绍了，为了方便介绍，只贴一下我build一个python3的Dockerfile吧：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">FROM ubuntu:16。04</span><br><span class="line">MAINTAINER cfour chenxin0530@gmail。com</span><br><span class="line">RUN sed -i &apos;s/http:\/\/archive\。ubuntu\。com\/ubuntu\//http:\/\/mirrors\。163\。com\/ubuntu\//g&apos; /etc/apt/sources。list</span><br><span class="line">RUN apt-get -y update &amp;&amp; apt-get install -y \</span><br><span class="line">git \</span><br><span class="line">python3 \</span><br><span class="line">python3-pip \</span><br><span class="line">unzip \</span><br><span class="line">fabric</span><br></pre></td></tr></table></figure>
+<p>在docker上，只简单的安装了git，python3， pip3， fabric以及unzip。</p>
 <hr>
-<h3 id="gitlab-ci-yml-文件"><a href="#gitlab-ci-yml-文件" class="headerlink" title=".gitlab-ci.yml 文件"></a>.gitlab-ci.yml 文件</h3><p>现在，假设你的项目已经在gitlab上了，在项目里面添加一个.gitlab-ci.yml文件，请看<a href="https://docs.gitlab.com.cn/ce/ci/yaml/README.html" target="_blank" rel="noopener">.gitlab-ci.yml详解</a><br>我的配置是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># image: base:server</span><br><span class="line"></span><br><span class="line">stages:</span><br><span class="line">  - build</span><br><span class="line">  - test</span><br><span class="line">  - deploy</span><br><span class="line"></span><br><span class="line">test:</span><br><span class="line">  stage: test</span><br><span class="line">  script: </span><br><span class="line">    - /home/cfour/.pyenv/shims/python3.6 manage.py test</span><br><span class="line"></span><br><span class="line">build:</span><br><span class="line">  stage: build</span><br><span class="line">  script: </span><br><span class="line">    - /home/cfour/.pyenv/shims/pip3.6 install -r requirments.txt</span><br><span class="line"></span><br><span class="line">deploy-test:</span><br><span class="line">  stage: deploy</span><br><span class="line">  when: manual</span><br><span class="line">  script: </span><br><span class="line">    - /usr/bin/python /home/cfour/workspace/deploy/creat_docker.py $CI_PROJECT_NAME http://root:1233333d@192.168.5.43/root/docker-ci-test.git</span><br></pre></td></tr></table></figure>
+<h2 id="。gitlab-ci。yml-文件"><a href="#。gitlab-ci。yml-文件" class="headerlink" title="。gitlab-ci。yml 文件"></a>。gitlab-ci。yml 文件</h2><p>现在，假设你的项目已经在gitlab上了，在项目里面添加一个。gitlab-ci。yml文件，请看<a href="https://docs。gitlab。com。cn/ce/ci/yaml/README。html" target="_blank" rel="noopener">。gitlab-ci。yml详解</a><br>我的配置是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># image: base:server</span><br><span class="line"></span><br><span class="line">stages:</span><br><span class="line">  - build</span><br><span class="line">  - test</span><br><span class="line">  - deploy</span><br><span class="line"></span><br><span class="line">test:</span><br><span class="line">  stage: test</span><br><span class="line">  script: </span><br><span class="line">    - /home/cfour/。pyenv/shims/python3。6 manage。py test</span><br><span class="line"></span><br><span class="line">build:</span><br><span class="line">  stage: build</span><br><span class="line">  script: </span><br><span class="line">    - /home/cfour/。pyenv/shims/pip3。6 install -r requirments。txt</span><br><span class="line"></span><br><span class="line">deploy-test:</span><br><span class="line">  stage: deploy</span><br><span class="line">  when: manual</span><br><span class="line">  script: </span><br><span class="line">    - /usr/bin/python /home/cfour/workspace/deploy/creat_docker。py $CI_PROJECT_NAME http://root:1233333d@192。168。5。43/root/docker-ci-test。git</span><br></pre></td></tr></table></figure>
 <p>来解读一下这个十分基础的配置文件。</p>
 <table>
 <thead>
@@ -368,7 +711,7 @@
 </tr>
 <tr>
 <td>stages</td>
-<td>定义builds阶段，默认即为build,test,deploy。</td>
+<td>定义builds阶段，默认即为build，test，deploy。</td>
 </tr>
 <tr>
 <td>script</td>
@@ -376,10 +719,10 @@
 </tr>
 </tbody>
 </table>
-<p>还有其他很多可以设置的方面。这里说说我遇到的问题，在executor使用docker时，填写本地build的image tag之后，runner会直接通过docker pull去获取镜像，而不是使用本地镜像。 这个可以通过在runner的配置文件config.toml里增加privileged = false来解决。</p>
-<p>配置文件中的$CI_PROJECT_NAME为runner变量，相关变量可以<a href="https://docs.gitlab.com.cn/ce/ci/variables/README.html#variables" target="_blank" rel="noopener">查看</a>。</p>
-<p>另外，在我的配置文件里面很多都写了全路径的原因是因为我使用了pyenv，并且项目环境为python3.6。</p>
-<h4 id="Jobs"><a href="#Jobs" class="headerlink" title="Jobs"></a>Jobs</h4><p>在我的配置文件中，申明了 test， build， deploy-test， 这个叫做<a href="https://docs.gitlab.com.cn/ce/ci/yaml/README.html#jobs" target="_blank" rel="noopener">Jobs</a>，里面还有许多设置，列几个我觉得重要的：</p>
+<p>还有其他很多可以设置的方面。这里说说我遇到的问题，在executor使用docker时，填写本地build的image tag之后，runner会直接通过docker pull去获取镜像，而不是使用本地镜像。 这个可以通过在runner的配置文件config。toml里增加privileged = false来解决。</p>
+<p>配置文件中的$CI_PROJECT_NAME为runner变量，相关变量可以<a href="https://docs。gitlab。com。cn/ce/ci/variables/README。html#variables" target="_blank" rel="noopener">查看</a>。</p>
+<p>另外，在我的配置文件里面很多都写了全路径的原因是因为我使用了pyenv，并且项目环境为python3。6。</p>
+<h3 id="Jobs"><a href="#Jobs" class="headerlink" title="Jobs"></a>Jobs</h3><p>在我的配置文件中，申明了 test， build， deploy-test， 这个叫做<a href="https://docs。gitlab。com。cn/ce/ci/yaml/README。html#jobs" target="_blank" rel="noopener">Jobs</a>，里面还有许多设置，列几个我觉得重要的：</p>
 <table>
 <thead>
 <tr>
@@ -406,27 +749,27 @@
 </tr>
 <tr>
 <td>when</td>
-<td>定义什么时候执行job，有on_success, on_failure, always， manual四个</td>
+<td>定义什么时候执行job，有on_success， on_failure， always， manual四个</td>
 </tr>
 </tbody>
 </table>
-<h4 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h4><p>直接push到gitlab上，在项目的piplines里面可以看到：</p>
-<img src="/2017/06/08/GitLab_CI_Docker/piplines.png" title="[piplines]">
-<p>已经执行了build和test，点击：</p>
-<img src="/2017/06/08/GitLab_CI_Docker/piplines_build.png" title="[piplines_build]">
-<p>进入可以看到：</p>
-<img src="/2017/06/08/GitLab_CI_Docker/build.png" title="[build]">
-<p>build的日志，相应的，test日志也可以去看。</p>
-<h3 id="部署到docker"><a href="#部署到docker" class="headerlink" title="部署到docker"></a>部署到docker</h3><h4 id="creat-docker-py"><a href="#creat-docker-py" class="headerlink" title="creat_docker.py"></a>creat_docker.py</h4><p>在.gitlab-ci.yml文件里，deploy-test写了when: manual，这个将会生成一个可以手动控制的deploy按钮:</p>
+<h3 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h3><p>直接push到gitlab上，在项目的piplines里面可以看到：</p>
 
-<p>点击这个按钮，将按照script里面写的脚本，执行一个叫做creat_docker的python程序，create_docker内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"># /usr/bin/python</span><br><span class="line"># encoding: utf-8</span><br><span class="line"># -*- coding: utf8 -*-</span><br><span class="line"></span><br><span class="line">import sys</span><br><span class="line">import docker</span><br><span class="line">import random</span><br><span class="line">import socket</span><br><span class="line">import re</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line">def is_open(port):</span><br><span class="line">    s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)</span><br><span class="line">    try:</span><br><span class="line">        s.connect((&quot;127.0.0.1&quot;,int(port)))</span><br><span class="line">        s.shutdown(2)</span><br><span class="line">        return True</span><br><span class="line">    except:</span><br><span class="line">        return False</span><br><span class="line"></span><br><span class="line">def deploy_project(container, repo_url, c_port):</span><br><span class="line">    cmd = &apos;fab -f /root/deploy/pyCapistrano.py deploy:repo_url=&#123;&#125;,port=&#123;&#125;&apos;.format(repo_url, c_port)</span><br><span class="line">    container.exec_run(cmd, stream=True)</span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    name = sys.argv[1]</span><br><span class="line">    repo_url = sys.argv[2]</span><br><span class="line">    client = docker.from_env()</span><br><span class="line">    try:</span><br><span class="line">        container = client.containers.get(name)</span><br><span class="line">        #if have container get port</span><br><span class="line">        port_bind = os.popen(&quot;docker port %s&quot; % name).read()</span><br><span class="line">        ports = re.findall(r&quot;\d&#123;4&#125;&quot;,port_bind)</span><br><span class="line">        c_port, l_port = ports[0], ports[1]</span><br><span class="line">    except:</span><br><span class="line">        l_port = random.randint(9000, 9999)</span><br><span class="line">        while is_open(l_port):</span><br><span class="line">            l_port = random.randint(9000, 9999)</span><br><span class="line">        c_port = random.randint(9000, 9999)</span><br><span class="line">        container = client.containers.run(&quot;base:server&quot;, command = &quot;tail -f /dev/null&quot;, name=name, ports=&#123;c_port:l_port&#125;, </span><br><span class="line">                volumes=&#123;&apos;/home/cfour/.pyenv/versions/3.6.0/lib/python3.6/site-packages&apos;: &#123;&apos;bind&apos;: &apos;/usr/local/lib/python3.5/dist-packages&apos;, &apos;mode&apos;: &apos;rw&apos;&#125;,</span><br><span class="line">                &apos;/home/cfour/workspace/deploy&apos;: &#123;&apos;bind&apos;: &apos;/root/deploy&apos;, &apos;mode&apos;: &apos;rw&apos;&#125;&#125;, detach=True)</span><br><span class="line">    deploy_project(container, repo_url, c_port)</span><br><span class="line">    print &quot;start server port at:%s&quot; % l_port</span><br></pre></td></tr></table></figure></p>
+<p>已经执行了build和test，点击：</p>
+
+<p>进入可以看到：</p>
+
+<p>build的日志，相应的，test日志也可以去看。</p>
+<h2 id="部署到docker"><a href="#部署到docker" class="headerlink" title="部署到docker"></a>部署到docker</h2><h3 id="creat-docker。py"><a href="#creat-docker。py" class="headerlink" title="creat_docker。py"></a>creat_docker。py</h3><p>在。gitlab-ci。yml文件里，deploy-test写了when: manual，这个将会生成一个可以手动控制的deploy按钮:</p>
+
+<p>点击这个按钮，将按照script里面写的脚本，执行一个叫做creat_docker的python程序，create_docker内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"># /usr/bin/python</span><br><span class="line"># encoding: utf-8</span><br><span class="line"># -*- coding: utf8 -*-</span><br><span class="line"></span><br><span class="line">import sys</span><br><span class="line">import docker</span><br><span class="line">import random</span><br><span class="line">import socket</span><br><span class="line">import re</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line">def is_open(port):</span><br><span class="line">    s = socket。socket(socket。AF_INET，socket。SOCK_STREAM)</span><br><span class="line">    try:</span><br><span class="line">        s。connect((&quot;127。0。0。1&quot;，int(port)))</span><br><span class="line">        s。shutdown(2)</span><br><span class="line">        return True</span><br><span class="line">    except:</span><br><span class="line">        return False</span><br><span class="line"></span><br><span class="line">def deploy_project(container， repo_url， c_port):</span><br><span class="line">    cmd = &apos;fab -f /root/deploy/pyCapistrano。py deploy:repo_url=&#123;&#125;，port=&#123;&#125;&apos;。format(repo_url， c_port)</span><br><span class="line">    container。exec_run(cmd， stream=True)</span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    name = sys。argv[1]</span><br><span class="line">    repo_url = sys。argv[2]</span><br><span class="line">    client = docker。from_env()</span><br><span class="line">    try:</span><br><span class="line">        container = client。containers。get(name)</span><br><span class="line">        #if have container get port</span><br><span class="line">        port_bind = os。popen(&quot;docker port %s&quot; % name)。read()</span><br><span class="line">        ports = re。findall(r&quot;\d&#123;4&#125;&quot;，port_bind)</span><br><span class="line">        c_port， l_port = ports[0]， ports[1]</span><br><span class="line">    except:</span><br><span class="line">        l_port = random。randint(9000， 9999)</span><br><span class="line">        while is_open(l_port):</span><br><span class="line">            l_port = random。randint(9000， 9999)</span><br><span class="line">        c_port = random。randint(9000， 9999)</span><br><span class="line">        container = client。containers。run(&quot;base:server&quot;， command = &quot;tail -f /dev/null&quot;， name=name， ports=&#123;c_port:l_port&#125;， </span><br><span class="line">                volumes=&#123;&apos;/home/cfour/。pyenv/versions/3。6。0/lib/python3。6/site-packages&apos;: &#123;&apos;bind&apos;: &apos;/usr/local/lib/python3。5/dist-packages&apos;， &apos;mode&apos;: &apos;rw&apos;&#125;，</span><br><span class="line">                &apos;/home/cfour/workspace/deploy&apos;: &#123;&apos;bind&apos;: &apos;/root/deploy&apos;， &apos;mode&apos;: &apos;rw&apos;&#125;&#125;， detach=True)</span><br><span class="line">    deploy_project(container， repo_url， c_port)</span><br><span class="line">    print &quot;start server port at:%s&quot; % l_port</span><br></pre></td></tr></table></figure></p>
 <p>可以看到脚本中接收一个name参数，一个repo_url参数，name代表创建的容器名称，而repo_url则是项目的git地址，在收到参数后，脚本会尝试按照名称获取容器，如果能获取到，则获得当前容器的端口映射。如果不能获取，尝试生成随机端口，创建容器，绑定端口。然后让容器执行一个叫pyCapistrano的脚本。</p>
-<h4 id="pyCapistrano-py"><a href="#pyCapistrano-py" class="headerlink" title="pyCapistrano.py"></a>pyCapistrano.py</h4><p>这个部署脚本来源于<a href="http://dgd2010.blog.51cto.com/1539422/1845307" target="_blank" rel="noopener">urey_pp 的BLOG</a>, 我做了一些修改：<br>去掉了原来的一些config，将部署目录直接定位在了deploy下。另外将repo目录通过git archive到releases目录，这样，就形成了按时间存储的版本管理。然后，形成部署的目录结构后，以在creat_docker.py中获取到的随机端口运行项目中的run.sh：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># /bin/bash</span><br><span class="line">basepath=$(cd `dirname $0`; pwd)</span><br><span class="line">cd $basepath</span><br><span class="line">export PYTHONPATH=/usr/local/lib/python3.5/dist-packages</span><br><span class="line">pip3 install -r requirments.txt</span><br><span class="line">echo &quot;init over!!!!&quot;</span><br><span class="line">ps -ef | grep python | awk &apos;&#123;print $2 &#125;&apos; | xargs -r kill</span><br><span class="line">nohup /usr/bin/python3 manage.py runserver 0.0.0.0:$1 &gt;&gt; nohup.log 2&gt;&amp;1 &amp;</span><br><span class="line">echo &quot;start server&quot;</span><br></pre></td></tr></table></figure></p>
-<p>run.sh就是简单的跑了一下django项目。对应的<a href="">pyCapistrano.py</a></p>
+<h3 id="pyCapistrano。py"><a href="#pyCapistrano。py" class="headerlink" title="pyCapistrano。py"></a>pyCapistrano。py</h3><p>这个部署脚本来源于<a href="http://dgd2010。blog。51cto。com/1539422/1845307" target="_blank" rel="noopener">urey_pp 的BLOG</a>， 我做了一些修改：<br>去掉了原来的一些config，将部署目录直接定位在了deploy下。另外将repo目录通过git archive到releases目录，这样，就形成了按时间存储的版本管理。然后，形成部署的目录结构后，以在creat_docker。py中获取到的随机端口运行项目中的run。sh：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># /bin/bash</span><br><span class="line">basepath=$(cd `dirname $0`; pwd)</span><br><span class="line">cd $basepath</span><br><span class="line">export PYTHONPATH=/usr/local/lib/python3。5/dist-packages</span><br><span class="line">pip3 install -r requirments。txt</span><br><span class="line">echo &quot;init over!!!!&quot;</span><br><span class="line">ps -ef | grep python | awk &apos;&#123;print $2 &#125;&apos; | xargs -r kill</span><br><span class="line">nohup /usr/bin/python3 manage。py runserver 0。0。0。0:$1 &gt;&gt; nohup。log 2&gt;&amp;1 &amp;</span><br><span class="line">echo &quot;start server&quot;</span><br></pre></td></tr></table></figure></p>
+<p>run。sh就是简单的跑了一下django项目。对应的<a href="">pyCapistrano。py</a></p>
 <p>看看效果吧：</p>
-<img src="/2017/06/08/GitLab_CI_Docker/deploy.png" title="[deploy]">
-<img src="/2017/06/08/GitLab_CI_Docker/result.png" title="[result]">
-<h3 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h3><p>至此，一个自动的CI/CD pipline已经完成了。当然这不是唯一的方法，gitlab的webhook一样可以做到。但是，本着操心的原则，最终还是选择了这种方式，失败了很多次，还好结果是好的，但是也深深的感觉到了还有更多的事等着完成。包括脚本的完善和重构。当然，这两个脚本可以用来做java的部署，只是需要一些修改，例如:在ci进行build的时候生成jar或者war，然后脚本不再需要通过git clone去下载整个项目，只需要获得war包，并部署到服务器中。后续我会再放出java版本。</p>
+
+
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>至此，一个自动的CI/CD pipline已经完成了。当然这不是唯一的方法，gitlab的webhook一样可以做到。但是，本着操心的原则，最终还是选择了这种方式，失败了很多次，还好结果是好的，但是也深深的感觉到了还有更多的事等着完成。包括脚本的完善和重构。当然，这两个脚本可以用来做java的部署，只是需要一些修改，例如:在ci进行build的时候生成jar或者war，然后脚本不再需要通过git clone去下载整个项目，只需要获得war包，并部署到服务器中。后续我会再放出java版本。</p>
 
           
         
@@ -568,7 +911,7 @@
       
         
           
-            <h2 id="Spring事物隔离级别"><a href="#Spring事物隔离级别" class="headerlink" title="Spring事物隔离级别"></a>Spring事物隔离级别</h2><h6 id="首先列出当前Spring中所包含的事物隔离级别："><a href="#首先列出当前Spring中所包含的事物隔离级别：" class="headerlink" title="首先列出当前Spring中所包含的事物隔离级别："></a>首先列出当前Spring中所包含的事物隔离级别：</h6><table>
+            <h2 id="Spring事物隔离级别"><a href="#Spring事物隔离级别" class="headerlink" title="Spring事物隔离级别"></a>Spring事物隔离级别</h2><table>
 <thead>
 <tr>
 <th>传播行为</th>
@@ -606,6 +949,16 @@
 </tr>
 </tbody>
 </table>
+<hr>
+<h2 id="隔离级别的简要说明"><a href="#隔离级别的简要说明" class="headerlink" title="隔离级别的简要说明"></a>隔离级别的简要说明</h2><h3 id="PROPAGATION-REQUIRED"><a href="#PROPAGATION-REQUIRED" class="headerlink" title="PROPAGATION_REQUIRED"></a>PROPAGATION_REQUIRED</h3><p>加入当前正要执行的事务， 如果没有事物， 那么就起一个新的事务。<br>例如: methodB 的事务级别定义为 PROPAGATION_REQUIRED， methodA 已经起了事务。这时，在methodA 中调用 methodB， methodB 看到自己已经运行在methodA的事务内部，就不再起新的事务。而假如methodA 运行的时候没有起事物， methodB就会为自己分配一个事务， 这样，在methodA 或者在methodB 内的任何地方出现异常，事务都会被回滚。即使methodB 的事务已经被提交，但是 methodA 在接下来要回滚， methodB 也要回滚。</p>
+<h3 id="PROPAGATION-SUPPORTS"><a href="#PROPAGATION-SUPPORTS" class="headerlink" title="PROPAGATION_SUPPORTS"></a>PROPAGATION_SUPPORTS</h3><p>如果当前在事务中，即以事务的形式运行，如果当前不再一个事务中，那么就以非事务的形式运行。</p>
+<h3 id="PROPAGATION-MANDATORY"><a href="#PROPAGATION-MANDATORY" class="headerlink" title="PROPAGATION_MANDATORY"></a>PROPAGATION_MANDATORY</h3><p>必须在一个事务中运行。也就是说，他只能被一个父事务调用。否则，他就要抛出异常。</p>
+<h3 id="PROPAGATION-REQUIRES-NEW"><a href="#PROPAGATION-REQUIRES-NEW" class="headerlink" title="PROPAGATION_REQUIRES_NEW"></a>PROPAGATION_REQUIRES_NEW</h3><p>比如我们设计 ServiceA。methodA 的事务级别为 PROPAGATION_REQUIRED， ServiceB。methodB 的事务级别为 PROPAGATION_REQUIRES_NEW， 那么当执行到 ServiceB。methodB 的时候，ServiceA。methodA 所在的事务就会挂起， ServiceB。methodB 会起一个新的事务， 该事物拥有自己的<strong>独立隔离级别</strong>和<strong>锁</strong>， 不依赖于外部事物， 等待 ServiceB。methodB 的事务完成以后， 他才继续执行。他与 PROPAGATION_REQUIRED 的事务区别在于事务的回滚程度了。因为 ServiceB。methodB 是新起一个事务， 那么就是存在两个不同的事务。如果 ServiceB。methodB 已经提交， 那么 ServiceA。methodA 失败回滚， ServiceB。methodB 是不会回滚的。如果 ServiceB。methodB 失败回滚， 如果他抛出的异常没有被 ServiceA。methodA 捕获，ServiceA。methodA 事务仍然可能提交。</p>
+<h3 id="PROPAGATION-NOT-SUPPORTED"><a href="#PROPAGATION-NOT-SUPPORTED" class="headerlink" title="PROPAGATION_NOT_SUPPORTED"></a>PROPAGATION_NOT_SUPPORTED</h3><p>当前不支持事务。比如 ServiceA。methodA 的事务级别是 PROPAGATION_REQUIRED， 而 ServiceB。methodB 的事务级别是 PROPAGATION_NOT_SUPPORTED， 那么当执行到 ServiceB。methodB 时， ServiceA。methodA 的事务挂起，而他以非事务的状态运行完， 再继续 ServiceA。methodA 的事务。</p>
+<h3 id="PROPAGATION-NEVER"><a href="#PROPAGATION-NEVER" class="headerlink" title="PROPAGATION_NEVER"></a>PROPAGATION_NEVER</h3><p>不能在事务中运行。假设 ServiceA。methodA 的事务级别是 PROPAGATION_REQUIRED， 而 ServiceB。methodB 的事务级别是 PROPAGATION_NEVER， 那么 ServiceB。methodB 就要抛出异常了。</p>
+<h3 id="PROPAGATION-NESTED"><a href="#PROPAGATION-NESTED" class="headerlink" title="PROPAGATION_NESTED"></a>PROPAGATION_NESTED</h3><p>理解 Nested 的关键是 savepoint。他与 PROPAGATION_REQUIRES_NEW 的区别是，PROPAGATION_REQUIRES_NEW 另起一个事务，将会与他的父事务相互独立，<br>而 Nested 的事务和他的父事务是相依的，他的提交是要等和他的父事务一块提交的。也就是说，如果父事务最后回滚，他也要回滚的。<br>而 Nested 事务的好处是他有一个 savepoint。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ServiceA &#123;</span><br><span class="line"></span><br><span class="line">// PROPAGATION_REQUIRED</span><br><span class="line">void methodA() &#123;</span><br><span class="line"></span><br><span class="line">try &#123;</span><br><span class="line"></span><br><span class="line">//savepoint</span><br><span class="line"></span><br><span class="line">ServiceB。methodB(); //PROPAGATION_NESTED 级别</span><br><span class="line"></span><br><span class="line">&#125; catch (SomeException) &#123;</span><br><span class="line"></span><br><span class="line">// 执行其他业务， 如 ServiceC。methodC();</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>也就是说 ServiceB。methodB 失败回滚，那么 ServiceA。methodA 也会回滚到 savepoint 点上，ServiceA。methodA 可以选择另外一个分支，比如ServiceC。methodC，继续执行，来尝试完成自己的事务。</p>
 
           
         
@@ -688,7 +1041,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -699,7 +1052,7 @@
                 
                 <div class="site-state-item site-state-categories">
                   <a href="/categories/index.html">
-                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -710,7 +1063,7 @@
                 
                 <div class="site-state-item site-state-tags">
                   <a href="/tags/index.html">
-                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-count">9</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

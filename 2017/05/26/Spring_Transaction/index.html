@@ -80,7 +80,7 @@
 <meta property="og:url" content="http://c4x.github.io/categories/index.html">
 <meta property="og:site_name" content="Cfour&#39;s Blog">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-12T09:42:17.587Z">
+<meta property="og:updated_time" content="2018-01-12T09:42:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分类">
 
@@ -177,6 +177,20 @@
           <a href="/" rel="section">
             <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
           首页</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+          标签</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+          分类</a>
         </li>
       
         
@@ -308,7 +322,7 @@
       
 
       
-        <h2 id="Spring事物隔离级别"><a href="#Spring事物隔离级别" class="headerlink" title="Spring事物隔离级别"></a>Spring事物隔离级别</h2><h6 id="首先列出当前Spring中所包含的事物隔离级别："><a href="#首先列出当前Spring中所包含的事物隔离级别：" class="headerlink" title="首先列出当前Spring中所包含的事物隔离级别："></a>首先列出当前Spring中所包含的事物隔离级别：</h6><table>
+        <h2 id="Spring事物隔离级别"><a href="#Spring事物隔离级别" class="headerlink" title="Spring事物隔离级别"></a>Spring事物隔离级别</h2><table>
 <thead>
 <tr>
 <th>传播行为</th>
@@ -346,6 +360,16 @@
 </tr>
 </tbody>
 </table>
+<hr>
+<h2 id="隔离级别的简要说明"><a href="#隔离级别的简要说明" class="headerlink" title="隔离级别的简要说明"></a>隔离级别的简要说明</h2><h3 id="PROPAGATION-REQUIRED"><a href="#PROPAGATION-REQUIRED" class="headerlink" title="PROPAGATION_REQUIRED"></a>PROPAGATION_REQUIRED</h3><p>加入当前正要执行的事务， 如果没有事物， 那么就起一个新的事务。<br>例如: methodB 的事务级别定义为 PROPAGATION_REQUIRED， methodA 已经起了事务。这时，在methodA 中调用 methodB， methodB 看到自己已经运行在methodA的事务内部，就不再起新的事务。而假如methodA 运行的时候没有起事物， methodB就会为自己分配一个事务， 这样，在methodA 或者在methodB 内的任何地方出现异常，事务都会被回滚。即使methodB 的事务已经被提交，但是 methodA 在接下来要回滚， methodB 也要回滚。</p>
+<h3 id="PROPAGATION-SUPPORTS"><a href="#PROPAGATION-SUPPORTS" class="headerlink" title="PROPAGATION_SUPPORTS"></a>PROPAGATION_SUPPORTS</h3><p>如果当前在事务中，即以事务的形式运行，如果当前不再一个事务中，那么就以非事务的形式运行。</p>
+<h3 id="PROPAGATION-MANDATORY"><a href="#PROPAGATION-MANDATORY" class="headerlink" title="PROPAGATION_MANDATORY"></a>PROPAGATION_MANDATORY</h3><p>必须在一个事务中运行。也就是说，他只能被一个父事务调用。否则，他就要抛出异常。</p>
+<h3 id="PROPAGATION-REQUIRES-NEW"><a href="#PROPAGATION-REQUIRES-NEW" class="headerlink" title="PROPAGATION_REQUIRES_NEW"></a>PROPAGATION_REQUIRES_NEW</h3><p>比如我们设计 ServiceA。methodA 的事务级别为 PROPAGATION_REQUIRED， ServiceB。methodB 的事务级别为 PROPAGATION_REQUIRES_NEW， 那么当执行到 ServiceB。methodB 的时候，ServiceA。methodA 所在的事务就会挂起， ServiceB。methodB 会起一个新的事务， 该事物拥有自己的<strong>独立隔离级别</strong>和<strong>锁</strong>， 不依赖于外部事物， 等待 ServiceB。methodB 的事务完成以后， 他才继续执行。他与 PROPAGATION_REQUIRED 的事务区别在于事务的回滚程度了。因为 ServiceB。methodB 是新起一个事务， 那么就是存在两个不同的事务。如果 ServiceB。methodB 已经提交， 那么 ServiceA。methodA 失败回滚， ServiceB。methodB 是不会回滚的。如果 ServiceB。methodB 失败回滚， 如果他抛出的异常没有被 ServiceA。methodA 捕获，ServiceA。methodA 事务仍然可能提交。</p>
+<h3 id="PROPAGATION-NOT-SUPPORTED"><a href="#PROPAGATION-NOT-SUPPORTED" class="headerlink" title="PROPAGATION_NOT_SUPPORTED"></a>PROPAGATION_NOT_SUPPORTED</h3><p>当前不支持事务。比如 ServiceA。methodA 的事务级别是 PROPAGATION_REQUIRED， 而 ServiceB。methodB 的事务级别是 PROPAGATION_NOT_SUPPORTED， 那么当执行到 ServiceB。methodB 时， ServiceA。methodA 的事务挂起，而他以非事务的状态运行完， 再继续 ServiceA。methodA 的事务。</p>
+<h3 id="PROPAGATION-NEVER"><a href="#PROPAGATION-NEVER" class="headerlink" title="PROPAGATION_NEVER"></a>PROPAGATION_NEVER</h3><p>不能在事务中运行。假设 ServiceA。methodA 的事务级别是 PROPAGATION_REQUIRED， 而 ServiceB。methodB 的事务级别是 PROPAGATION_NEVER， 那么 ServiceB。methodB 就要抛出异常了。</p>
+<h3 id="PROPAGATION-NESTED"><a href="#PROPAGATION-NESTED" class="headerlink" title="PROPAGATION_NESTED"></a>PROPAGATION_NESTED</h3><p>理解 Nested 的关键是 savepoint。他与 PROPAGATION_REQUIRES_NEW 的区别是，PROPAGATION_REQUIRES_NEW 另起一个事务，将会与他的父事务相互独立，<br>而 Nested 的事务和他的父事务是相依的，他的提交是要等和他的父事务一块提交的。也就是说，如果父事务最后回滚，他也要回滚的。<br>而 Nested 事务的好处是他有一个 savepoint。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ServiceA &#123;</span><br><span class="line"></span><br><span class="line">// PROPAGATION_REQUIRED</span><br><span class="line">void methodA() &#123;</span><br><span class="line"></span><br><span class="line">try &#123;</span><br><span class="line"></span><br><span class="line">//savepoint</span><br><span class="line"></span><br><span class="line">ServiceB。methodB(); //PROPAGATION_NESTED 级别</span><br><span class="line"></span><br><span class="line">&#125; catch (SomeException) &#123;</span><br><span class="line"></span><br><span class="line">// 执行其他业务， 如 ServiceC。methodC();</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>也就是说 ServiceB。methodB 失败回滚，那么 ServiceA。methodA 也会回滚到 savepoint 点上，ServiceA。methodA 可以选择另外一个分支，比如ServiceC。methodC，继续执行，来尝试完成自己的事务。</p>
 
       
     </div>
@@ -462,7 +486,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -473,7 +497,7 @@
                 
                 <div class="site-state-item site-state-categories">
                   <a href="/categories/index.html">
-                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -484,7 +508,7 @@
                 
                 <div class="site-state-item site-state-tags">
                   <a href="/tags/index.html">
-                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-count">9</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -527,7 +551,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring事物隔离级别"><span class="nav-number">1.</span> <span class="nav-text">Spring事物隔离级别</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#首先列出当前Spring中所包含的事物隔离级别："><span class="nav-number">1.0.0.0.1.</span> <span class="nav-text">首先列出当前Spring中所包含的事物隔离级别：</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring事物隔离级别"><span class="nav-number">1.</span> <span class="nav-text">Spring事物隔离级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#隔离级别的简要说明"><span class="nav-number">2.</span> <span class="nav-text">隔离级别的简要说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PROPAGATION-REQUIRED"><span class="nav-number">2.1.</span> <span class="nav-text">PROPAGATION_REQUIRED</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PROPAGATION-SUPPORTS"><span class="nav-number">2.2.</span> <span class="nav-text">PROPAGATION_SUPPORTS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PROPAGATION-MANDATORY"><span class="nav-number">2.3.</span> <span class="nav-text">PROPAGATION_MANDATORY</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PROPAGATION-REQUIRES-NEW"><span class="nav-number">2.4.</span> <span class="nav-text">PROPAGATION_REQUIRES_NEW</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PROPAGATION-NOT-SUPPORTED"><span class="nav-number">2.5.</span> <span class="nav-text">PROPAGATION_NOT_SUPPORTED</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PROPAGATION-NEVER"><span class="nav-number">2.6.</span> <span class="nav-text">PROPAGATION_NEVER</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PROPAGATION-NESTED"><span class="nav-number">2.7.</span> <span class="nav-text">PROPAGATION_NESTED</span></a></li></ol></li></ol></div>
             
 
           </div>
